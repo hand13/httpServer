@@ -4,7 +4,7 @@ Request::Request(){
 }
 Request Request::fromMessage(const char * buffer,int length) {
     RequestParser parser(buffer,length);
-    return parser.parse();
+    return parser.parseRequest();
 }
 std::string Request::getUrl() const{
     return url;

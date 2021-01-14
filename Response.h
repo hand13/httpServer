@@ -2,7 +2,10 @@
 #include "Header.h"
 #include <vector>
 enum ResponseStatus {
-    OK=200
+    OK=200,
+    BAD_REQUEST=400,
+    NO_FOUND = 404,
+    SERVER_ERROR=500
 };
 class Response {
     private:

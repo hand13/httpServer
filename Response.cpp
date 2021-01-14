@@ -24,8 +24,21 @@ void Response::setContent(const std::string && content) {
 void Response::toMessage(char * buffer,int bufferLength,int & length) {
     std::string msg;
     msg += "HTTP/1.1 " + std::to_string(status) + " ";
-    if(status == OK) {
+    switch (status) {
+    case OK:
         msg += "OK";
+        break;
+    case NO_FOUND:
+        msg += "Not Found";
+        break;
+    case BAD_REQUEST:
+        msg += "Bad Request";
+        break;
+    case SERVER_ERROR:
+        msg += "Internal Server Error";
+        break;
+    default:
+        break;
     }
     msg += "\r\n";
     for(Header & header:headers) {

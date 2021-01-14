@@ -1,5 +1,5 @@
 #pragma once
-#include "Request.h"
+class Request;
 class RequestParser {
     private:
     int lookup;
@@ -7,5 +7,5 @@ class RequestParser {
     int bufferLength;
     public:
     RequestParser(const char * buffer,int bufferLength);
-    Request parse();
+    Request parseRequest();
 };
