@@ -1,0 +1,21 @@
+#pragma once
+#include "Header.h"
+#include <vector>
+enum ResponseStatus {
+    OK=200
+};
+class Response {
+    private:
+    int protocol;
+    int status;
+    std::vector<Header> headers;
+    std::vector<unsigned char> content;
+    public:
+    Response();
+    void setProtocol(int protocol);
+    void setStatus(ResponseStatus stauts);
+    void addHeader(const Header &&header);
+    void setContent(const char * buffer,int length);
+    void setContent(const std::string && content);
+    void toMessage(char * buffer,int bufferLength,int& length);
+};
