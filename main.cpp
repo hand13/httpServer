@@ -5,7 +5,20 @@
 #include <string>
 #include <sstream>
 #include "Response.h"
+#include <ctime>
 using namespace std::chrono;
+std::string now() {
+    time_t now;
+    time(&now);
+    tm tm;
+    localtime_s(&tm,&now);
+    return std::to_string(tm.tm_year + 1900) 
+    + "-" + std::to_string(tm.tm_mon + 1) 
+    + "-" + std::to_string(tm.tm_mday)
+    + " " + std::to_string(tm.tm_hour)
+    + ":" + std::to_string(tm.tm_min)
+    + ":" + std::to_string(tm.tm_sec);
+}
 int main() {
     std::cout.imbue(std::locale("",LC_CTYPE));
     WSAData wsaData;
@@ -43,7 +56,7 @@ int main() {
         }
         Response response;
         response.addHeader(Header("Content-Type","application/json"));
-        response.setContent("{\"name\":\"hand13\",\"password\":\"123456\"}");
+        response.setContent("{\"name\":\"hand13\",\"password\":\"123456\",\"time\":\""+now() + "\"}");
         int length;
         response.toMessage(buffer,sizeof(buffer),length);
         send(clientSocket,buffer,length,0);
