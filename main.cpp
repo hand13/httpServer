@@ -8,7 +8,11 @@
 #include <ctime>
 #include "Request.h"
 #include "RequestParser.h"
+#include <filesystem>
+#include <fstream>
+namespace fs=std::filesystem;
 using namespace std::chrono;
+const char * static_path = "d:/inside/timeworld/static";
 bool ctrlHandler(DWORD fdwctrltype) {
   switch(fdwctrltype) {
     case CTRL_C_EVENT:
@@ -54,9 +58,9 @@ int main() {
     SOCKET clientSocket;
     sockaddr_in clientAddr;
     int length = sizeof(sockaddr_in);
-    char buffer[2048];
+    char buffer[4096];
     // char buffer[] = "HTTP/1.1 200 OK\r\nContent-Type:text/html;charset=UTF-8\r\n\n<h1>nice to meet you</h1>";
-    char rBuffer[2048];
+    char rBuffer[4096];
     ZeroMemory(rBuffer,sizeof(rBuffer));
     while(true) {
         if((clientSocket  = accept(socket,reinterpret_cast<sockaddr*>((&clientAddr)),&length)) == INVALID_SOCKET) {
@@ -70,11 +74,27 @@ int main() {
         }
         RequestParser parser(rBuffer,l);
         Request request = parser.parseRequest();
-        std::cout<<request.getMethod()<<std::endl;
-        std::cout<<request.getUrl()<<std::endl;
+        std::cout<<"what you want is "<<request.getUrl()<<std::endl;
+
         Response response;
-        response.addHeader(Header("Content-Type","application/json"));
-        response.setContent("{\"name\":\"hand13\",\"password\":\"123456\",\"time\":\""+now() + "\"}");
+
+        fs::path path(static_path);
+        path += request.getUrl();
+        std::cout<<"file path is "<<path<<std::endl;
+        if(fs::exists(path) && fs::is_regular_file(path)) {
+            size_t length = fs::file_size(path);
+            if(length > 0) {
+                char * buffer = new char[length];
+                std::ifstream is(path,std::ios_base::in | std::ios_base::binary);
+                is.read(buffer,length);
+                is.close();
+                response.setContent(buffer,length);
+                delete [] buffer;
+            }
+        }else {
+            response.addHeader(Header("Content-Type","application/json"));
+            response.setContent("{\"name\":\"hand13\",\"password\":\"123456\",\"time\":\""+now() + "\"}");
+        }
         int length;
         response.toMessage(buffer,sizeof(buffer),length);
         send(clientSocket,buffer,length,0);

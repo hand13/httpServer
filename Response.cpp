@@ -9,7 +9,7 @@ void Response::setProtocol(int protocol) {
 void Response::setStatus(ResponseStatus status) {
     this->status = status;
 }
-void Response::addHeader(const Header && header) {
+void Response::addHeader(const Header & header) {
     headers.push_back(header);
 }
 void Response::setContent(const char * buffer,int length) {
@@ -18,7 +18,7 @@ void Response::setContent(const char * buffer,int length) {
     }
     addHeader(Header("Content-Length",std::to_string(length)));
 }
-void Response::setContent(const std::string && content) {
+void Response::setContent(const std::string & content) {
     setContent(content.c_str(),content.size());
 }
 void Response::toMessage(char * buffer,int bufferLength,int & length) {

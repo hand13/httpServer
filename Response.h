@@ -17,8 +17,8 @@ class Response {
     Response();
     void setProtocol(int protocol);
     void setStatus(ResponseStatus stauts);
-    void addHeader(const Header &&header);
+    void addHeader(const Header &header);
     void setContent(const char * buffer,int length);
-    void setContent(const std::string && content);
+    void setContent(const std::string & content);
     void toMessage(char * buffer,int bufferLength,int& length);
 };
