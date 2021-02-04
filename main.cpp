@@ -69,7 +69,12 @@ int main() {
         }
         int l = recv(clientSocket,rBuffer,sizeof(rBuffer),0);
         if(l > 0) {
-            rBuffer[l] = 0;
+            if (l == sizeof(rBuffer)) {
+                rBuffer[l - 1] = 0;
+            }
+            else {
+                rBuffer[l] = 0;
+            }
             std::cout<<rBuffer<<std::endl;
         }
         RequestParser parser(rBuffer,l);
