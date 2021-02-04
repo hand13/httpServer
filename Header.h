@@ -2,7 +2,7 @@
 #include <string>
 class Header{
     public:
-    Header(std::string&& key,std::string&& value);
+    Header(const std::string& key,const std::string& value);
     std::string key;
     std::string value;
 };

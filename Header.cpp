@@ -1,2 +1,2 @@
 #include "Header.h"
-Header::Header(std::string &&key,std::string&& value):key(key),value(value) {}
+Header::Header(const std::string &key,const std::string& value):key(key),value(value) {}

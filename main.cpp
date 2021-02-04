@@ -6,7 +6,20 @@
 #include <sstream>
 #include "Response.h"
 #include <ctime>
+#include "Request.h"
+#include "RequestParser.h"
 using namespace std::chrono;
+bool ctrlHandler(DWORD fdwctrltype) {
+  switch(fdwctrltype) {
+    case CTRL_C_EVENT:
+      std::cout<<"啊我死了"<<std::endl;
+      ExitProcess(-1);
+      break;
+    default:
+      break;
+  }
+  return false;
+}
 std::string now() {
     time_t now;
     time(&now);
@@ -21,6 +34,7 @@ std::string now() {
 }
 int main() {
     std::cout.imbue(std::locale("",LC_CTYPE));
+    ::SetConsoleCtrlHandler((PHANDLER_ROUTINE)ctrlHandler,true);
     WSAData wsaData;
     if(WSAStartup(MAKEWORD(2,1),&wsaData)!= 0) {
         std::cout<<"初始化失败"<<std::endl;
@@ -54,6 +68,10 @@ int main() {
             rBuffer[l] = 0;
             std::cout<<rBuffer<<std::endl;
         }
+        RequestParser parser(rBuffer,l);
+        Request request = parser.parseRequest();
+        std::cout<<request.getMethod()<<std::endl;
+        std::cout<<request.getUrl()<<std::endl;
         Response response;
         response.addHeader(Header("Content-Type","application/json"));
         response.setContent("{\"name\":\"hand13\",\"password\":\"123456\",\"time\":\""+now() + "\"}");
