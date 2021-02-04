@@ -92,8 +92,9 @@ int main() {
                 delete [] buffer;
             }
         }else {
-            response.addHeader(Header("Content-Type","application/json"));
-            response.setContent("{\"name\":\"hand13\",\"password\":\"123456\",\"time\":\""+now() + "\"}");
+          response.setStatus(ResponseStatus::NO_FOUND);
+            //response.addHeader(Header("Content-Type","application/json"));
+            //response.setContent("{\"name\":\"hand13\",\"password\":\"123456\",\"time\":\""+now() + "\"}");
         }
         int length;
         response.toMessage(buffer,sizeof(buffer),length);
